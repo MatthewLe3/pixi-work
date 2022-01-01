@@ -1,0 +1,172 @@
+{
+    "name": "night_test",
+    "version": "4.5",
+    "armature": [{
+        "name": "starRoot",
+        "defaultActions": [{
+            "gotoAndPlay": "move"
+        }],
+        "bone": [{
+            "name": "root",
+            "transform": {
+                "x": 1762.5,
+                "y": 1194
+            }
+        }, {
+            "name": "star",
+            "transform": {
+                "x": -1181.8288,
+                "y": -109.2279
+            },
+            "parent": "root"
+        }],
+        "aabb": {
+            "x": 0,
+            "height": 2388,
+            "y": 0,
+            "width": 3525
+        },
+        "canvas": {
+            "x": 0,
+            "height": 2388,
+            "y": 0,
+            "width": 3525
+        },
+        "ik": [],
+        "frameRate": 24,
+        "animation": [{
+            "name": "move",
+            "frame": [],
+            "ik": [],
+            "duration": 167,
+            "slot": [],
+            "bone": [{
+                "name": "root",
+                "frame": [{
+                    "transform": {},
+                    "duration": 167
+                }, {
+                    "transform": {
+                        "x": -0.0012,
+                        "y": -0.0021
+                    },
+                    "duration": 0
+                }]
+            }, {
+                "name": "star",
+                "frame": [{
+                    "transform": {
+                        "x": -0.0012,
+                        "y": -0.0021
+                    },
+                    "duration": 10,
+                    "tweenEasing": 0
+                }, {
+                    "transform": {
+                        "x": 449.0428,
+                        "y": -221.745
+                    },
+                    "duration": 10,
+                    "tweenEasing": 0
+                }, {
+                    "transform": {
+                        "x": 806.4663,
+                        "y": -3.2592
+                    },
+                    "duration": 10,
+                    "tweenEasing": 0
+                }, {
+                    "transform": {
+                        "x": 89.3692,
+                        "y": 410.2553
+                    },
+                    "duration": 10,
+                    "tweenEasing": 0
+                }, {
+                    "transform": {
+                        "x": 291.4988,
+                        "y": 537.4979
+                    },
+                    "duration": 9,
+                    "tweenEasing": 0
+                }, {
+                    "transform": {
+                        "x": 811.4988,
+                        "y": 282.4979
+                    },
+                    "duration": 12,
+                    "tweenEasing": 0
+                }, {
+                    "transform": {
+                        "x": 1277.7488,
+                        "y": 525.2479
+                    },
+                    "duration": 15,
+                    "tweenEasing": 0
+                }, {
+                    "transform": {
+                        "x": 2036.9988,
+                        "y": 155.2479
+                    },
+                    "duration": 23,
+                    "tweenEasing": 0
+                }, {
+                    "transform": {
+                        "x": 2834.4988,
+                        "y": 565.2479
+                    },
+                    "duration": 18,
+                    "tweenEasing": 0
+                }, {
+                    "transform": {
+                        "x": 1626.9988,
+                        "y": 1192.7479
+                    },
+                    "duration": 37,
+                    "tweenEasing": 0
+                }, {
+                    "transform": {
+                        "x": -390.5012,
+                        "y": 182.7479
+                    },
+                    "duration": 13
+                }]
+            }],
+            "playTimes": 0,
+            "ffd": []
+        }],
+        "type": "Armature",
+        "slot": [{
+            "name": "nightMap-min",
+            "color": {},
+            "parent": "root"
+        }, {
+            "name": "star",
+            "color": {},
+            "z": 1,
+            "parent": "star"
+        }],
+        "skin": [{
+            "name": "",
+            "slot": [{
+                "name": "nightMap-min",
+                "display": [{
+                    "name": "night-test",
+                    "transform": {},
+                    "type": "image",
+                    "path": "night-test"
+                }]
+            }, {
+                "name": "star",
+                "display": [{
+                    "name": "star",
+                    "transform": {},
+                    "type": "image",
+                    "path": "star"
+                }]
+            }]
+        }]
+    }],
+    "frameRate": 24,
+    "isGlobal": 0
+}

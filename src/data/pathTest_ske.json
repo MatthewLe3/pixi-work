@@ -1,0 +1,107 @@
+{
+  "frameRate": 24,
+  "isGlobal": 0,
+  "armature": [
+    {
+      "defaultActions": [{ "gotoAndPlay": "newAnimation" }],
+      "ik": [],
+      "type": "Armature",
+      "bone": [
+        { "name": "root", "transform": {} },
+        { "transform": {}, "name": "move", "parent": "root" }
+      ],
+      "aabb": { "width": 316, "y": -44.5, "height": 89, "x": -158 },
+      "slot": [
+        {
+          "color": {},
+          "name": "f587d690b8f3d87cd57899efba6f1a360b6529d22018c0107418914be09b607aQzpcVXNlcnNcdGFvbGlcQXBwRGF0YVxSb2FtaW5nXERpbmdUYWxrXDI0MDgzNTk4NTJfdjJcSW1hZ2VGaWxlc1wxNjM2NzA0MDkzMTE3X0QzMkIxOTJDLUJDMzMtNDcyNy1BQTdGLTEzNDU3QzAxNUU4MC5wbmc=",
+          "parent": "root"
+        },
+        {
+          "z": 1,
+          "color": {},
+          "name": "f587d690b8f3d87cd57899efba6f1a360b6529d22018c0107418914be09b607aQzpcVXNlcnNcdGFvbGlcQXBwRGF0YVxSb2FtaW5nXERpbmdUYWxrXDI0MDgzNTk4NTJfdjJcSW1hZ2VGaWxlc1wxNjM2NzA0MDkzMTE3X0QzMkIxOTJDLUJDMzMtNDcyNy1BQTdGLTEzNDU3QzAxNUU4MC5wbmc=1",
+          "parent": "move"
+        }
+      ],
+      "animation": [
+        {
+          "duration": 60,
+          "frame": [],
+          "ik": [],
+          "bone": [
+            { "frame": [{ "duration": 60, "transform": {} }], "name": "root" },
+            {
+              "frame": [
+                {
+                  "duration": 11,
+                  "transform": { "y": 342.5, "x": 503.25 },
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 14,
+                  "transform": { "y": 630, "x": 1075 },
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 13,
+                  "transform": { "y": 1010, "x": 455 },
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 10,
+                  "transform": { "y": 1510, "x": 1430 },
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 12,
+                  "transform": { "y": 1165, "x": 2165 },
+                  "tweenEasing": 0
+                },
+                { "duration": 0, "transform": { "y": 342.5, "x": 503.25 } }
+              ],
+              "name": "move"
+            }
+          ],
+          "slot": [],
+          "ffd": [],
+          "playTimes": 0,
+          "name": "newAnimation"
+        }
+      ],
+      "name": "Armature",
+      "frameRate": 24,
+      "skin": [
+        {
+          "name": "",
+          "slot": [
+            {
+              "display": [
+                {
+                  "path": "f587d690b8f3d87cd57899efba6f1a360b6529d22018c0107418914be09b607aQzpcVXNlcnNcdGFvbGlcQXBwRGF0YVxSb2FtaW5nXERpbmdUYWxrXDI0MDgzNTk4NTJfdjJcSW1hZ2VGaWxlc1wxNjM2NzA0MDkzMTE3X0QzMkIxOTJDLUJDMzMtNDcyNy1BQTdGLTEzNDU3QzAxNUU4MC5wbmc=",
+                  "type": "image",
+                  "name": "f587d690b8f3d87cd57899efba6f1a360b6529d22018c0107418914be09b607aQzpcVXNlcnNcdGFvbGlcQXBwRGF0YVxSb2FtaW5nXERpbmdUYWxrXDI0MDgzNTk4NTJfdjJcSW1hZ2VGaWxlc1wxNjM2NzA0MDkzMTE3X0QzMkIxOTJDLUJDMzMtNDcyNy1BQTdGLTEzNDU3QzAxNUU4MC5wbmc=",
+                  "transform": {}
+                }
+              ],
+              "name": "f587d690b8f3d87cd57899efba6f1a360b6529d22018c0107418914be09b607aQzpcVXNlcnNcdGFvbGlcQXBwRGF0YVxSb2FtaW5nXERpbmdUYWxrXDI0MDgzNTk4NTJfdjJcSW1hZ2VGaWxlc1wxNjM2NzA0MDkzMTE3X0QzMkIxOTJDLUJDMzMtNDcyNy1BQTdGLTEzNDU3QzAxNUU4MC5wbmc="
+            },
+            {
+              "display": [
+                {
+                  "path": "f587d690b8f3d87cd57899efba6f1a360b6529d22018c0107418914be09b607aQzpcVXNlcnNcdGFvbGlcQXBwRGF0YVxSb2FtaW5nXERpbmdUYWxrXDI0MDgzNTk4NTJfdjJcSW1hZ2VGaWxlc1wxNjM2NzA0MDkzMTE3X0QzMkIxOTJDLUJDMzMtNDcyNy1BQTdGLTEzNDU3QzAxNUU4MC5wbmc=",
+                  "type": "image",
+                  "name": "f587d690b8f3d87cd57899efba6f1a360b6529d22018c0107418914be09b607aQzpcVXNlcnNcdGFvbGlcQXBwRGF0YVxSb2FtaW5nXERpbmdUYWxrXDI0MDgzNTk4NTJfdjJcSW1hZ2VGaWxlc1wxNjM2NzA0MDkzMTE3X0QzMkIxOTJDLUJDMzMtNDcyNy1BQTdGLTEzNDU3QzAxNUU4MC5wbmc=",
+                  "transform": {}
+                }
+              ],
+              "name": "f587d690b8f3d87cd57899efba6f1a360b6529d22018c0107418914be09b607aQzpcVXNlcnNcdGFvbGlcQXBwRGF0YVxSb2FtaW5nXERpbmdUYWxrXDI0MDgzNTk4NTJfdjJcSW1hZ2VGaWxlc1wxNjM2NzA0MDkzMTE3X0QzMkIxOTJDLUJDMzMtNDcyNy1BQTdGLTEzNDU3QzAxNUU4MC5wbmc=1"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "name": "pathTest",
+  "version": "4.0"
+}

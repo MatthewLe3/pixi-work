@@ -1,0 +1,72 @@
+{
+  "frameRate": 24,
+  "isGlobal": 0,
+  "name": "pathTest",
+  "version": "4.0",
+  "armature": [
+    {
+      "slot": [],
+      "type": "Armature",
+      "frameRate": 24,
+      "ik": [],
+      "skin": [],
+      "animation": [
+        {
+          "slot": [],
+          "frame": [],
+          "playTimes": 0,
+          "ik": [],
+          "ffd": [],
+          "duration": 102,
+          "name": "newAnimation",
+          "bone": [
+            { "frame": [{ "duration": 102, "transform": {} }], "name": "root" },
+            {
+              "frame": [
+                {
+                  "duration": 17,
+                  "transform": { "y": 395, "x": 605 },
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 20,
+                  "transform": { "y": 635, "x": 1090 },
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 15,
+                  "transform": { "y": 1014.25, "x": 454 },
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 15,
+                  "transform": { "y": 1310, "x": 990.25 },
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 13,
+                  "transform": { "y": 1014.25, "x": 454 },
+                  "tweenEasing": 0
+                },
+                {
+                  "duration": 22,
+                  "transform": { "y": 635, "x": 1090 },
+                  "tweenEasing": 0
+                },
+                { "duration": 0, "transform": { "y": 395, "x": 605 } }
+              ],
+              "name": "move"
+            }
+          ]
+        }
+      ],
+      "defaultActions": [{ "gotoAndPlay": "newAnimation" }],
+      "name": "Armature",
+      "bone": [
+        { "transform": {}, "name": "root" },
+        { "transform": {}, "name": "move", "parent": "root" }
+      ],
+      "aabb": { "width": 0, "y": 0, "height": 0, "x": 0 }
+    }
+  ]
+}
