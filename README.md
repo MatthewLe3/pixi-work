@@ -1,4 +1,4 @@
-# night2.0
+# pixi-test
 
 ## Project setup
 ```
