@@ -2867,6 +2867,11 @@
   "resolved" "https://registry.nlark.com/cookie-signature/download/cookie-signature-1.0.6.tgz"
   "version" "1.0.6"
 
+"cookie-storage@^6.1.0":
+  "integrity" "sha512-HeVqbVy8BjXhAAuFtL6MTG+witHoLbxfky2jgVh9FmxmyL6IKa9gSSyPNjevXCCCxPu6Tzd9J8+eXTRQzYU/cg=="
+  "resolved" "https://registry.npmjs.org/cookie-storage/-/cookie-storage-6.1.0.tgz"
+  "version" "6.1.0"
+
 "cookie@0.4.0":
   "integrity" "sha1-vrQ35wIrO21JAZ0IhmUwPr6cFLo="
   "resolved" "https://registry.nlark.com/cookie/download/cookie-0.4.0.tgz"
@@ -2895,6 +2900,11 @@
   "integrity" "sha1-Z29us8OZl8LuGsOpJP1hJHSPV40="
   "resolved" "https://registry.nlark.com/copy-descriptor/download/copy-descriptor-0.1.1.tgz"
   "version" "0.1.1"
+
+"copy-text-to-clipboard@^3.0.1":
+  "integrity" "sha512-rvVsHrpFcL4F2P8ihsoLdFHmd404+CMg71S756oRSeQgqk51U3kicGdnvfkrxva0xXH92SjGS62B0XIJsbh+9Q=="
+  "resolved" "https://registry.npmjs.org/copy-text-to-clipboard/-/copy-text-to-clipboard-3.0.1.tgz"
+  "version" "3.0.1"
 
 "copy-webpack-plugin@^5.1.1":
   "integrity" "sha1-ioieHcr6bJHGzUvhrRWPHTgjuuI="
@@ -2927,7 +2937,7 @@
   "resolved" "https://registry.npmmirror.com/core-js/download/core-js-2.6.12.tgz?cache=0&sync_timestamp=1634062568985&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fcore-js%2Fdownload%2Fcore-js-2.6.12.tgz"
   "version" "2.6.12"
 
-"core-js@^3.6.5":
+"core-js@^3.11.0", "core-js@^3.6.5":
   "integrity" "sha1-hqC7otjsPfhg/vzAeo0Rl3nwFQk="
   "resolved" "https://registry.npmmirror.com/core-js/download/core-js-3.18.3.tgz?cache=0&sync_timestamp=1634062568985&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fcore-js%2Fdownload%2Fcore-js-3.18.3.tgz"
   "version" "3.18.3"
@@ -5700,6 +5710,11 @@
     "dns-packet" "^1.3.1"
     "thunky" "^1.0.2"
 
+"mutation-observer@^1.0.3":
+  "integrity" "sha512-M/O/4rF2h776hV7qGMZUH3utZLO/jK7p8rnNgGkjKUw8zCGjRQPxB8z6+5l8+VjRUQ3dNYu4vjqXYLr+U8ZVNA=="
+  "resolved" "https://registry.npmjs.org/mutation-observer/-/mutation-observer-1.0.3.tgz"
+  "version" "1.0.3"
+
 "mz@^2.4.0":
   "integrity" "sha1-lQCAV6Vsr63CvGPd5/n/aVWUjjI="
   "resolved" "https://registry.nlark.com/mz/download/mz-2.7.0.tgz"
@@ -8279,6 +8294,16 @@
   "integrity" "sha1-IpnwLG3tMNSllhsLn3RSShj2NPw="
   "resolved" "https://registry.nlark.com/vary/download/vary-1.1.2.tgz"
   "version" "1.1.2"
+
+"vconsole@^3.9.1":
+  "integrity" "sha512-DZ6WrSy+5ep11FWxq89DHv8we83rCCrGZaZqlHEXZ+wCvivFd6kfo8OizIP5iQZ0Ynf8Qxj3UfnilFp4HtTVcA=="
+  "resolved" "https://registry.npmjs.org/vconsole/-/vconsole-3.11.0.tgz"
+  "version" "3.11.0"
+  dependencies:
+    "cookie-storage" "^6.1.0"
+    "copy-text-to-clipboard" "^3.0.1"
+    "core-js" "^3.11.0"
+    "mutation-observer" "^1.0.3"
 
 "vendors@^1.0.0":
   "integrity" "sha1-4rgApT56Kbk1BsPPQRANFsTErY4="

@@ -33,7 +33,8 @@ export default {
 		return {
 			app: null,
 			rootContainer: null,
-			stagePosition: { x: 0, y: 0 },
+			stagePosition: { x: 386, y: 0 },
+			stagePivot: { x: 386, y: 0 },
 			pkqSprite: null,
 			stageScale: 0.3,
 			uniforms: {},
@@ -41,6 +42,41 @@ export default {
 			rootRenderTexture: null,
 			showMap: false,
 			uniforms: {},
+
+			// 手势操作相关
+			touchFlag: 0, //手势操作 0，1
+			currentStagePosition: {
+				//手势操作时，记录当前位置信息
+				x: 0,
+				y: 0,
+			},
+			singleFingerPosition: {
+				//单指操作时，手指在屏幕上的位置
+				clientX: 0,
+				clientY: 0,
+			},
+			diffPosition: {
+				//单指位移距离
+				clientX: 0,
+				clientY: 0,
+			},
+
+			// 双指位置信息
+			firstFingerPosition: {
+				clientX: 0,
+				clientY: 0,
+			},
+			secondFingerPositiion: {
+				clientX: 0,
+				clientY: 0,
+			},
+			initDistance: 0, //双指落下时的距离
+			currentDistance: 0, //双指缩放时的距离
+			currentScale: 0.3, //当前缩放
+			scaleCoefficient: 2, //缩放系数
+			touchesArr: [],
+			lockedScale: false,
+			scaleBeforeChange: 0,
 		};
 	},
 	mounted() {
@@ -56,7 +92,15 @@ export default {
 			});
 			document.querySelector('#canvas').appendChild(this.app.view);
 
-			const stage = (this.app.stage = new Stage());
+			// const stage = (this.app.stage = new Stage());
+			this.app.stage = new Stage();
+
+			// 设置初始信息
+			this.setMapInfo(
+				this.stageScale,
+				this.stagePosition,
+				this.stagePivot,
+			);
 
 			var loader = new Loader();
 			loader
@@ -70,7 +114,6 @@ export default {
 			this.rootContainer = new Container();
 			this.app.stage.addChild(this.rootContainer);
 
-			this.app.stage.scale.set(this.stageScale);
 			this.rootContainer.addChild(bg);
 			this.rootContainer.addChild(this.pkqSprite);
 
@@ -267,49 +310,211 @@ export default {
 			this.app.stage.on('touchstart', (e) => this.onTouchStart(e));
 			this.app.stage.on('touchmove', (e) => this.onTouchMove(e));
 			this.app.stage.on('touchend', (e) => this.onTouchEnd(e));
+
+			this.pkqSprite.interactive = true;
+			this.pkqSprite.buttonMode = true;
+			this.pkqSprite.on('tap', (e) => this.onSpriteTap(e));
+		},
+		onSpriteTap(e) {
+			console.log('点击了sprite', e);
 		},
 		onTouchStart(e) {
-			console.log('vv');
-			const { clientX, clientY } = e.data.originalEvent.touches[0];
-			this.initPosition = {
-				clientX,
-				clientY,
-			};
-			this.initStage = {
-				x: this.app.stage.x,
-				y: this.app.stage.y,
-			};
+			// 是否开始手势操作
+			this.touchFlag = 1;
+
+			// 当前点在stage中的位置
+			let pointInStage = e.data.getLocalPosition(this.app.stage);
+			if (this.touchesArr.length == 2) {
+				this.touchesArr.shift();
+			}
+			this.touchesArr.push(pointInStage);
+
+			const touchLenght = e.data.originalEvent.touches.length;
+			if (touchLenght == 1) {
+				// 拖动操作
+				const { clientX, clientY } = e.data.originalEvent.touches[0];
+				this.singleFingerPosition = {
+					clientX,
+					clientY,
+				};
+
+				// 当前stage的位移
+				this.currentStagePosition = {
+					x: this.app.stage.x,
+					y: this.app.stage.y,
+				};
+			} else if (touchLenght == 2) {
+				// 缩放操作
+
+				// 记录两点的初始距离
+				this.firstFingerPosition = {
+					clientX: e.data.originalEvent.touches['0'].clientX,
+					clientY: e.data.originalEvent.touches['0'].clientY,
+				};
+				this.secondFingerPositiion = {
+					clientX: e.data.originalEvent.touches['1'].clientX,
+					clientY: e.data.originalEvent.touches['1'].clientY,
+				};
+
+				this.initDistance = this.getFingersDistance(
+					this.firstFingerPosition,
+					this.secondFingerPositiion,
+				);
+
+				//修改pivot，并对position做相应的调整
+				const centerPointInStage = {
+					x: (this.touchesArr[0].x + this.touchesArr[1].x) / 2,
+					y: (this.touchesArr[0].y + this.touchesArr[1].y) / 2,
+				};
+
+				// 新旧pivot的差
+				const diffPivot = {
+					x: centerPointInStage.x - this.app.stage.pivot.x,
+					y: centerPointInStage.y - this.app.stage.pivot.y,
+				};
+
+				const oldPosition = {
+					x: this.app.stage.x,
+					y: this.app.stage.y,
+				};
+
+				// 当前stage的位移
+				this.currentStagePosition = {
+					x: oldPosition.x + diffPivot.x * this.stageScale,
+					y: oldPosition.y + diffPivot.y * this.stageScale,
+				};
+
+				this.app.stage.pivot.set(
+					centerPointInStage.x,
+					centerPointInStage.y,
+				);
+
+				this.app.stage.position.set(
+					this.currentStagePosition.x,
+					this.currentStagePosition.y,
+				);
+			}
 		},
 		onTouchMove(e) {
-			const { clientX, clientY } = e.data.originalEvent.touches[0];
-			this.diffPosition = {
-				clientX: clientX - this.initPosition.clientX,
-				clientY: clientY - this.initPosition.clientY,
-			};
+			// return
+			if (this.touchFlag === 0) return;
 
-			this.app.stage.position.set(
-				this.initStage.x + this.diffPosition.clientX,
-				this.initStage.y + this.diffPosition.clientY,
-			);
+			const touchLenght = e.data.originalEvent.touches.length;
 
-			this.stagePosition = {
-				x: this.app.stage.position.x,
-				y: this.app.stage.position.y,
-			};
+			if (touchLenght == 1) {
+				// 拖动
+				const { clientX, clientY } = e.data.originalEvent.touches[0];
+				this.diffPosition = {
+					clientX: clientX - this.singleFingerPosition.clientX,
+					clientY: clientY - this.singleFingerPosition.clientY,
+				};
+
+				let newPositionInfo = {
+					x: this.currentStagePosition.x + this.diffPosition.clientX,
+					y: this.currentStagePosition.y + this.diffPosition.clientY,
+				};
+
+				// 判断拖动是否超出边界
+				let boundaryInfo = this.judgeMoveBoundary(
+					newPositionInfo,
+					this.app.stage.pivot,
+				);
+				if (boundaryInfo.fixedX) {
+					newPositionInfo.x = this.app.stage.x;
+				}
+				if (boundaryInfo.fixedY) {
+					newPositionInfo.y = this.app.stage.y;
+				}
+				this.app.stage.position.set(
+					newPositionInfo.x,
+					newPositionInfo.y,
+				);
+			} else if (touchLenght == 2) {
+				// 缩放
+				// 实时的距离
+				this.firstFingerPosition = {
+					clientX: e.data.originalEvent.touches['0'].clientX,
+					clientY: e.data.originalEvent.touches['0'].clientY,
+				};
+				this.secondFingerPositiion = {
+					clientX: e.data.originalEvent.touches['1'].clientX,
+					clientY: e.data.originalEvent.touches['1'].clientY,
+				};
+
+				this.currentDistance = this.getFingersDistance(
+					this.firstFingerPosition,
+					this.secondFingerPositiion,
+				);
+
+				this.stageScale =
+					(this.currentScale * this.currentDistance) /
+					this.initDistance;
+
+				// 重新设置stage信息
+				this.scaleBeforeChange = this.app.stage.scale.x;
+				this.app.stage.scale.set(this.stageScale);
+
+				// 锁边
+				// 1.不能小于屏幕
+				// 2.出现黑边自动位移
+
+				const { width, height } = this.app.stage;
+
+				if (width < window.innerWidth || height < window.innerHeight) {
+					this.stageScale = this.scaleBeforeChange;
+					this.app.stage.scale.set(this.stageScale);
+				}
+
+				// if(boundaryInfo.fixedX || boundaryInfo.fixedY){
+				// this.lockedScale = true
+				// this.app.stage.scale.set(this.scaleBeforeChange)
+				// this.lockedScale = false
+				// }
+			}
 		},
 		onTouchEnd(e) {
-			//   const { position } = this.pkqSprite;
-			// console.log(position.x,position.y,this.pkqSprite);
-			//toLocal、toGlobal
-			// console.log('worldTransform',this.pkqSprite.transform.worldTransform.tx,this.pkqSprite.transform.worldTransform.ty)
-			// console.log('global',this.pkqSprite.toGlobal(pkg.position))
-			// console.log('local',this.pkqSprite.toLocal(pkg.parent))
-			// 输出stage的世界坐标
-			//   console.log(
-			//     "stage世界坐标",
-			//     this.app.stage.position.x,
-			//     this.app.stage.position.y
-			//   );
+			this.touchFlag = 0;
+			// 松手后判断是否有黑边
+			let position = this.app.stage.position;
+			let pivot = this.app.stage.pivot;
+			let boundaryInfo = this.judgeMoveBoundary(
+				this.app.stage.position,
+				this.app.stage.pivot,
+			);
+
+			if (boundaryInfo.fixedX) {
+				//判断贴合左边还是右边
+				const x = position.x - pivot.x * this.stageScale;
+				const awayLeft = x;
+				const awayRight =
+					window.innerWidth - mapWidth * this.stageScale - x;
+
+				if (awayLeft < 0) {
+					// 贴右边
+					this.app.stage.position.x += awayRight;
+				} else {
+					// 贴左边
+					this.app.stage.position.x -= awayLeft;
+				}
+			}
+
+			if (boundaryInfo.fixedY) {
+				// 判断贴合上边还是下边
+				const y = position.y - pivot.y * this.stageScale;
+				const awayTop = y;
+				const awayBottom =
+					window.innerHeight - mapHeight * this.stageScale - y;
+
+				if (awayTop < 0) {
+					// 贴下边
+					this.app.stage.position.y += awayBottom;
+				} else {
+					// 贴上边
+					this.app.stage.position.y -= awayTop;
+				}
+			}
+
+			this.currentScale = this.app.stage.scale.x;
 		},
 		handleAnimation(index, eachFramePos) {
 			let spriteWidth = this.pkqSprite.width;
@@ -326,14 +531,65 @@ export default {
 		handleLightPosition(sprite, width, height) {
 			const { tx, ty } = sprite.transform.worldTransform;
 
-            this.uniforms.u_PointLightPosition = [
-				(tx+width/2) / mapWidth,
-				(ty+height/2)/ mapHeight/(mapWidth/mapHeight),
+			this.uniforms.u_PointLightPosition = [
+				(tx + width / 2) / mapWidth,
+				(ty + height / 2) / mapHeight / (mapWidth / mapHeight),
 				0.022,
 			];
 		},
-	}
+
+		// 设置场景缩放率，偏移，缩放远点
+		setMapInfo(scale, positionInfo, pivotInfo) {
+			// 地图缩放率
+			this.app.stage.scale.set(scale);
+			// 地图位移
+			this.app.stage.position.set(positionInfo.x, positionInfo.y);
+			// 地图缩放原点
+			this.app.stage.pivot.set(pivotInfo.x / scale, pivotInfo.y / scale);
+		},
+
+		// 拖动边界
+		judgeMoveBoundary(position, pivot) {
+			const x = position.x - pivot.x * this.stageScale;
+			const y = position.y - pivot.y * this.stageScale;
+			let boundaryInfo = {
+				fixedX: false,
+				fixedY: false,
+			};
+			if (x > 0) {
+				// 左边出界
+				boundaryInfo.fixedX = true;
+			}
+			if (x < window.innerWidth - mapWidth * this.stageScale) {
+				// 右边出界
+				boundaryInfo.fixedX = true;
+			}
+			if (y > 0) {
+				// 上边出界
+				boundaryInfo.fixedY = true;
+			}
+			if (y < window.innerHeight - mapHeight * this.stageScale) {
+				// 下边出界
+				boundaryInfo.fixedY = true;
+			}
+
+			return boundaryInfo;
+		},
+
+		// 计算双指间距离
+		getFingersDistance(first, second) {
+			let xDis = Math.abs(first.clientX - second.clientX);
+			let yDis = Math.abs(first.clientY - second.clientY);
+			return Math.sqrt(Math.pow(xDis, 2) + Math.pow(yDis, 2));
+		},
+	},
 };
 </script>
-
-<style></style>
+<style lang="less" scoped>
+#root {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+</style>
