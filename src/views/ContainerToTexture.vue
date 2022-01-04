@@ -18,6 +18,8 @@ import {
 	Geometry,
 	Shader,
 	Mesh,
+	Filter,
+	Rectangle,
 	// Renderer,
 } from 'pixi.js';
 import { Layer, Stage } from '../../public/lib/pixi-layers';
@@ -41,7 +43,9 @@ export default {
 			plainGeometry: null,
 			rootRenderTexture: null,
 			showMap: false,
-			uniforms: {},
+			riverUniforms: {},
+			iTime: 0,
+			riverBloackList: [],
 
 			// 手势操作相关
 			touchFlag: 0, //手势操作 0，1
@@ -104,17 +108,58 @@ export default {
 
 			var loader = new Loader();
 			loader
-				.add('bg_diffuse', '/light/day.jpg')
+				.add('bg_diffuse', '/bg/dayMap-min.png')
+				.add('bg_river_block', '/river/riverRect-min.png')
+				// .add('bg_River', '/river/river.png')
 				.load(this.onAssetsLoaded);
 		},
 		onAssetsLoaded(loader, res) {
 			var bg = new Sprite(res.bg_diffuse.texture);
+			// var river = new Sprite(res.bg_River.texture);
 			this.pkqSprite = new Sprite(new Texture.from('/img/pkq.png'));
 
 			this.rootContainer = new Container();
 			this.app.stage.addChild(this.rootContainer);
 
+			// 添加河道
+			let arr = [];
+
+			let riverSpriteInfo = [
+				{ x: 0, y: 2500, scaleX: 1.3, scaleY: 1 },
+				{ x: 600, y: 3000, scaleX: 1, scaleY: 1 },
+				{ x: 1000, y: 3500, scaleX: 1, scaleY: 1 },
+				{ x: 2100, y: 4000, scaleX: 1, scaleY: 1 },
+				{ x: 2600, y: 2500, scaleX: 0.5, scaleY: 1 },
+				{ x: 2600, y: 2000, scaleX: 0.5, scaleY: 1 },
+				{ x: 3000, y: 4150, scaleX: 0.7, scaleY: 1 },
+				{ x: 3600, y: 2000, scaleX: 0.5, scaleY: 1 },
+				{ x: 3600, y: 1500, scaleX: 0.5, scaleY: 1 },
+				{ x: 4600, y: 1500, scaleX: 0.5, scaleY: 1 },
+				{ x: 4600, y: 1000, scaleX: 0.5, scaleY: 1 },
+				{ x: 5600, y: 1500, scaleX: 0.5, scaleY: 1 },
+				{ x: 5600, y: 1000, scaleX: 0.5, scaleY: 1 },
+				{ x: 5600, y: 500, scaleX: 0.9, scaleY: 1 },
+				{ x: 5600, y: 1500, scaleX: 0.5, scaleY: 1 },
+				{ x: 6000, y: 2000, scaleX: 0.7, scaleY: 1 },
+				{ x: 6400, y: 0, scaleX: 0.5, scaleY: 1 },
+			];
+
+			riverSpriteInfo.map((val) => {
+				const sprite = new Sprite(res.bg_river_block.texture);
+				sprite.position.set(val.x, val.y);
+				sprite.scale.x = val.scaleX;
+				sprite.scale.y = val.scaleY;
+				arr.push(sprite);
+			});
+
+			this.riverBloackList = [...this.riverBloackList, ...arr];
+
+			this.riverBloackList.map((val, index) => {
+				this.rootContainer.addChild(val);
+			});
+
 			this.rootContainer.addChild(bg);
+
 			this.rootContainer.addChild(this.pkqSprite);
 
 			this.rootRenderTexture = new RenderTexture(
@@ -126,6 +171,7 @@ export default {
 				),
 			);
 			this.addShader();
+			this.addRiverFilter();
 		},
 		addShader() {
 			this.plainGeometry = new Geometry()
@@ -298,10 +344,100 @@ export default {
 				);
 
 				index++;
+				this.iTime += 1;
+				this.riverUniforms.iTime = this.iTime / 20;
+				// console.log('this.riverUniforms.iTime',this.riverUniforms.iTime)
 				if (index > eachFramePos.length - 1) index = 0;
 				this.handleAnimation(index, eachFramePos);
 			});
 			this.addEvent();
+		},
+		addRiverFilter() {
+			const vertexShader = `
+				attribute vec2 aVertexPosition;
+				attribute vec2 aTextureCoord;
+
+				uniform mat3 projectionMatrix;
+
+				varying vec2 vTextureCoord;
+				varying vec4 v_position;
+
+				void main(void)
+				{
+					gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);
+					vTextureCoord = aTextureCoord;
+					v_position = gl_Position;
+				}
+			`;
+			const fragmentShader = `
+				varying vec2 vTextureCoord;
+				varying vec4 v_position;
+
+        		uniform sampler2D uSampler;
+				uniform float iTime;
+
+				vec2 hash2(vec2 p ) {
+					return fract(sin(vec2(dot(p, vec2(123.4, 748.6)), dot(p, vec2(547.3, 659.3))))*5232.85324);   
+				}
+				float hash(vec2 p) {
+					return fract(sin(dot(p, vec2(43.232, 75.876)))*4526.3257);   
+				}
+
+				float voronoi(vec2 p) {
+					vec2 n = floor(p);
+					vec2 f = fract(p);
+					float md = 5.0;
+					vec2 m = vec2(0.0);
+					for (int i = -1;i<=1;i++) {
+						for (int j = -1;j<=1;j++) {
+							vec2 g = vec2(i, j);
+							vec2 o = hash2(n+g);
+							o = 0.5+0.5*sin(iTime+5.038*o);
+							vec2 r = g + o - f;
+							float d = dot(r, r);
+							if (d<md) {
+							md = d;
+							m = n+g+o;
+							}
+						}
+					}
+					return md;
+				}
+
+				float ov(vec2 p) {
+					float v = 0.0;
+					float a = 0.4;
+					for (int i = 0;i<3;i++) {
+						v+= voronoi(p)*a;
+						p*=2.0;
+						a*=0.5;
+					}
+					return v;
+				}
+
+				void main(void){
+					vec4 bgSampler = texture2D(uSampler,vTextureCoord);
+
+					vec3 color = vec3(1.0,0.0,0.0);
+					vec4 a = vec4(143.0/255.0, 172.0/255.0, 173.0/255.0, 1.0);
+					vec4 b = vec4(0.85, 0.9, 1.0, 1.0);
+					// gl_FragColor = bgSampler;
+					gl_FragColor = vec4(mix(a, b, smoothstep(0.0, 0.5, ov(v_position.xy*5.0))));
+				}
+			`;
+			this.riverUniforms = {
+				iTime: this.iTime,
+			};
+
+			let filter = new Filter(
+				vertexShader,
+				fragmentShader,
+				this.riverUniforms,
+			);
+
+			this.riverBloackList.map((val, index) => {
+				val.filters = [filter];
+			});
 		},
 		addEvent() {
 			this.app.stage.interactive = true;
