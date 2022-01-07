@@ -24,7 +24,7 @@ import {
 } from 'pixi.js';
 import { Layer, Stage } from '../../public/lib/pixi-layers';
 
-import { getEachFrameData } from '../utils/pixiUtils';
+import { getEachFrameData, dragonbonesSprite } from '../utils/pixiUtils';
 const PATH_INFO = require('../data/filterPath_ske.json');
 
 const mapWidth = 7495;
@@ -111,6 +111,20 @@ export default {
 				.add('bg_diffuse', '/bg/dayMap-min.png')
 				.add('bg_river_block', '/river/riverRect-min.png')
 				// .add('bg_River', '/river/river.png')
+				.add([
+					{
+						name: `flagBones`,
+						url: `/animation/flag/flag_animation_ske.json`,
+					},
+					{
+						name: `flagTextureData`,
+						url: `/animation/flag/flag_animation_tex.json`,
+					},
+					{
+						name: `flagTexturePng`,
+						url: `/animation/flag/flag_animation_tex.png`,
+					},
+				])
 				.load(this.onAssetsLoaded);
 		},
 		onAssetsLoaded(loader, res) {
@@ -172,6 +186,13 @@ export default {
 			);
 			this.addShader();
 			this.addRiverFilter();
+
+			// 添加旗帜
+			const flagSprite = dragonbonesSprite(res,'flag')
+			flagSprite.position.set(800,400)
+			flagSprite.animation.timeScale = 0.5;
+			flagSprite.animation.play("waving");
+			this.rootContainer.addChild(flagSprite)
 		},
 		addShader() {
 			this.plainGeometry = new Geometry()
