@@ -25,6 +25,10 @@ import {
 import { Layer, Stage } from '../../public/lib/pixi-layers';
 
 import { getEachFrameData, dragonbonesSprite } from '../utils/pixiUtils';
+
+import * as dat from 'dat.gui';
+const gui = new dat.GUI();
+
 const PATH_INFO = require('../data/filterPath_ske.json');
 
 const mapWidth = 7495;
@@ -188,11 +192,29 @@ export default {
 			this.addRiverFilter();
 
 			// 添加旗帜
-			const flagSprite = dragonbonesSprite(res,'flag')
-			flagSprite.position.set(800,400)
+			const flagSprite = dragonbonesSprite(res, 'flag');
+			flagSprite.position.set(649, 649);
+			flagSprite.scale.set(0.6);
 			flagSprite.animation.timeScale = 0.5;
-			flagSprite.animation.play("waving");
-			this.rootContainer.addChild(flagSprite)
+			flagSprite.animation.play('waving');
+			this.rootContainer.addChild(flagSprite);
+
+			let obj = {
+				x:649,
+				y:649,
+				scale:0.6
+			}
+			var flagControl = gui.addFolder('旗帜');
+			flagControl.add(obj,'x',0, 7000, 0.5).onChange((e)=>{
+				flagSprite.position.x = Number(e)
+			})
+			flagControl.add(obj,'y',0, 7000, 0.5).onChange((e)=>{
+				flagSprite.position.y = Number(e)
+			})
+			flagControl.add(obj,'scale',0, 5, 0.1).onChange((e)=>{
+				flagSprite.scale.set(Number(e))
+			})
+			flagControl.open()
 		},
 		addShader() {
 			this.plainGeometry = new Geometry()
